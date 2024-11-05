@@ -1,7 +1,7 @@
 import tkinter as tk
 
 from binance_bot.binance_api.binance_login import BinanceLogin
-from binance_bot.app_manager.app_controller import AppController
+from binance_bot.app_manager.app_controller import run_app_controller, app_controller
 
 class ConfigureLogo():
     def __init__(self, root):
@@ -9,13 +9,13 @@ class ConfigureLogo():
         self.initialise_logo()
         
     def initialise_logo(self):
-        logo_frame = tk.Frame(self.root)
-        logo_frame.grid(row=7, 
+        self.logo_frame = tk.Frame(self.root)
+        self.logo_frame.grid(row=7, 
                         column=2, 
                         rowspan=3, 
                         columnspan=6, 
                         sticky='nsew')
-        logo_label = tk.Label(logo_frame, 
+        logo_label = tk.Label(self.logo_frame, 
                               text="Binance Bot Trader v1", 
                               font=('Courier', 20), 
                               bg='green', 
@@ -29,14 +29,14 @@ class ConfigureNameEntry():
         self.initialise_name_entry()
         
     def initialise_name_entry(self):
-        name_frame = tk.Frame(self.root, bg='red')                  
-        name_frame.grid(row=10, 
+        self.name_frame = tk.Frame(self.root, bg='red')                  
+        self.name_frame.grid(row=10, 
                         column=3, 
                         rowspan=1, 
                         columnspan=4, 
                         sticky='nsew')
         self.name = tk.StringVar(value="Enter name")
-        name_entry = tk.Entry(name_frame, 
+        name_entry = tk.Entry(self.name_frame, 
                               textvariable=self.name, 
                               width=1, 
                               bg='blue', 
@@ -59,14 +59,14 @@ class ConfigureApiKeyEntry():
         self.initialise_api_key_entry()
         
     def initialise_api_key_entry(self):
-        api_key_frame = tk.Frame(self.root, bg='green')
-        api_key_frame.grid(row=11, 
+        self.api_key_frame = tk.Frame(self.root, bg='green')
+        self.api_key_frame.grid(row=11, 
                            column=3, 
                            rowspan=1, 
                            columnspan=4, 
                            sticky='nsew')
         self.api_key = tk.StringVar(value="Enter api key")
-        api_key_entry = tk.Entry(api_key_frame, 
+        api_key_entry = tk.Entry(self.api_key_frame, 
                                  textvariable=self.api_key, 
                                  width=1, 
                                  bg='blue', 
@@ -90,14 +90,14 @@ class ConfigureSecurityKeyEntry():
         self.initialise_secret_key_entry()
         
     def initialise_secret_key_entry(self):
-        secret_key_frame = tk.Frame(self.root, bg='pink')
-        secret_key_frame.grid(row=12, 
+        self.secret_key_frame = tk.Frame(self.root, bg='pink')
+        self.secret_key_frame.grid(row=12, 
                                 column=3, 
                                 rowspan=1, 
                                 columnspan=4, 
                                 sticky='nsew')
         self.secret_key = tk.StringVar(value="Enter security key")
-        secret_key_entry = tk.Entry(secret_key_frame, 
+        secret_key_entry = tk.Entry(self.secret_key_frame, 
                                       textvariable=self.secret_key, 
                                       width=1, 
                                       bg='blue', 
@@ -115,20 +115,22 @@ class ConfigureSecurityKeyEntry():
             entry_var.set(placeholder) 
         
 class ConfigureLoginButton():
-    def __init__(self, root, api, secret):
+    def __init__(self, root, logo, name, api, secret):
         self.root = root
+        self.logo = logo
+        self.name = name
         self.api = api
         self.secret = secret
         self.initialise_login_button()
         
     def initialise_login_button(self):
-        login_frame = tk.Frame(self.root, bg='purple')
-        login_frame.grid(row=13, 
+        self.login_frame = tk.Frame(self.root, bg='purple')
+        self.login_frame.grid(row=13, 
                          column=4, 
                          rowspan=1, 
                          columnspan=2, 
                          sticky='nsew')
-        login_button = tk.Button(login_frame, 
+        login_button = tk.Button(self.login_frame, 
                                  text="Login", 
                                  font=('Courier', 8), 
                                  command=self.cb_login)
@@ -137,7 +139,15 @@ class ConfigureLoginButton():
     def cb_login(self):
         self.binance = BinanceLogin(self.api.api_key.get(), self.secret.secret_key.get())
         if self.binance.authenticated:
-            AppController(self.root, self.binance)
+            app_controller = run_app_controller(self.root, 
+                               self.binance, 
+                               self.logo,
+                               self.name,
+                               self.api,
+                               self.secret,
+                               self.login_frame)
+            app_controller.dashboard()
+            
             print("welcome")
         
 

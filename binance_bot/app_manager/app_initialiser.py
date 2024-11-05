@@ -7,14 +7,14 @@ class AppInitialiser():
     def __init__(self, root):
         self.root = root
         self.get_user_data()
-        self.bootup()
+        self.load_window()
         self.setup_grid()
         self.login()
         
     def get_user_data(self):
         self.user = User(self.root)
         
-    def bootup(self):
+    def load_window(self):
         self.root.title("Binance Bot Trader v1")
         self.root.geometry(f"{self.user.width}x{self.user.height}")
         self.root.configure(bg='black', highlightthickness=0, bd=0)
