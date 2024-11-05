@@ -5,9 +5,9 @@ from binance_bot.views.login.login_widgets import *
 class LoginView():
     def __init__(self, root):
         self.root = root
-        self.configure_view()
+        self.configure_login_view()
         
-    def configure_view(self):
+    def configure_login_view(self):
         logo = ConfigureLogo(self.root)
         name = ConfigureNameEntry(self.root)
         api = ConfigureApiKeyEntry(self.root)
